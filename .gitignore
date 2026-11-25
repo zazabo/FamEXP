@@ -1,0 +1,13 @@
+node_modules/
+dist/
+dev-dist/
+.env
+.env.local
+*.log
+.DS_Store
+Thumbs.db
+# Never commit data exports
+*.xlsx
+*.pdf
+# Screenshots and files Claude sends back
+Claude outputs/
