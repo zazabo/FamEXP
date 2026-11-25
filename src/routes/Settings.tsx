@@ -4,10 +4,10 @@ import { db } from '../db/schema';
 import { getDeviceId } from '../db/init';
 import { LOCALES, currentLocale, setLocale } from '../i18n';
 import { useTheme } from '../theme/ThemeProvider';
-import { ComingSoon } from '../components/ComingSoon';
 import { SecuritySettings } from '../components/SecuritySettings';
 import { FamilySettings } from '../components/FamilySettings';
 import { SyncSettings } from '../components/SyncSettings';
+import { ExportSettings } from '../components/ExportSettings';
 import type { ThemeMode } from '../types';
 
 const THEME_MODES: { mode: ThemeMode; key: string }[] = [
@@ -16,7 +16,7 @@ const THEME_MODES: { mode: ThemeMode; key: string }[] = [
   { mode: 'dark', key: 'settings.themeDark' },
 ];
 
-/** Tab 3 — appearance, family & budget, security, Dropbox sync; export arrives in Phase 6. */
+/** Tab 3 — appearance, family & budget, security, Dropbox sync, Excel export, about. */
 export function Settings() {
   const { t } = useTranslation();
   const { mode, setMode } = useTheme();
@@ -61,7 +61,7 @@ export function Settings() {
       <section className="card"><SyncSettings /></section>
 
       <h2 className="section-title">{t('settings.export')}</h2>
-      <section className="card"><ComingSoon phase={6} /></section>
+      <section className="card"><ExportSettings /></section>
 
       <h2 className="section-title">{t('settings.about')}</h2>
       <section className="card">

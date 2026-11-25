@@ -25,11 +25,27 @@ interface PendingAuth {
 export type DropboxErrorKind = 'offline' | 'auth' | 'notfound' | 'other';
 
 export class DropboxError extends Error {
-  constructor(public kind: DropboxErrorKind, message: string, public status?: number) {
+  constructor(public kind: DropboxErrorKind, message: string, public status?: number, public dropboxCode?: string) {
     super(message);
     this.name = 'DropboxError';
   }
 }
+
+/** Why Dropbox refused an authorization code (shown to the parent in plain words). */
+export type AuthFailure = 'expired' | 'otherDevice' | 'appNotAllowed' | 'offline' | 'other';
+
+export function authFailureOf(err: unknown): AuthFailure {
+  if (!(err instanceof DropboxError)) return 'other';
+  if (err.kind === 'offline') return 'offline';
+  const text = `${err.dropboxCode ?? ''} ${err.message}`.toLowerCase();
+  if (/invalid_client|unauthorized_client|public client|pkce/.test(text)) return 'appNotAllowed';
+  if (/verifier/.test(text)) return 'otherDevice';
+  if (/invalid_grant|expired|doesn't exist|does not exist|not found/.test(text)) return 'expired';
+  return 'other';
+}
+
+/** Keep only characters that Dropbox authorization codes use (drops spaces, quotes, dots, line breaks). */
+export const cleanAuthCode = (code: string): string => code.replace(/[^A-Za-z0-9_-]/g, '');
 
 export interface DropboxEntry {
   name: string;
@@ -86,10 +102,23 @@ export async function finishAuth(code: string): Promise<void> {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
-      code: code.trim(), grant_type: 'authorization_code', client_id: DROPBOX_APP_KEY, code_verifier: pending.verifier,
+      code: cleanAuthCode(code), grant_type: 'authorization_code', client_id: DROPBOX_APP_KEY, code_verifier: pending.verifier,
     }),
   });
-  if (!res.ok) throw new DropboxError(res.status === 400 ? 'auth' : 'other', 'Code rejected', res.status);
+  if (!res.ok) {
+    let dropboxCode = '';
+    let description = res.statusText;
+    try {
+      const body = (await res.json()) as { error?: string; error_description?: string };
+      dropboxCode = body.error ?? '';
+      description = body.error_description ?? body.error ?? description;
+    } catch {
+      /* not JSON */
+    }
+    // A rejected code can never be retried with the same verifier pair → start over with a fresh one.
+    await setLocal('dropboxPkce', null);
+    throw new DropboxError(res.status === 400 || res.status === 401 ? 'auth' : 'other', description, res.status, dropboxCode);
+  }
   const json = (await res.json()) as { access_token: string; expires_in: number; refresh_token: string; account_id?: string };
   await setLocal('dropboxAuth', {
     accessToken: json.access_token,

@@ -60,6 +60,8 @@ export interface PeriodSummary {
   byMember: MemberShare[];
   /** Month: that month's budget. Year: sum of the months that have one. Week: null. */
   budgetCents: number | null;
+  /** Who paid how much — every parent, in parent order (also those who paid nothing). */
+  byPayer: { id: string; name: string; cents: number }[];
 }
 
 // ---------------------------------------------------------------- dates
@@ -250,9 +252,17 @@ export function summarize(range: PeriodRange, expenses: Expense[], ctx: Context)
     budgetCents = vals.length ? vals.reduce((s, v) => s + v, 0) : null;
   }
 
+  // Paid by (parents in slot order; a removed parent appears only if they paid something)
+  const paid = new Map<string, number>();
+  for (const e of rows) paid.set(e.paidById, (paid.get(e.paidById) ?? 0) + e.amountCents);
+  const byPayer = ctx.members
+    .filter((m) => m.role === 'parent' && (m.deletedAt === null || paid.has(m.id)))
+    .sort((a, b) => (a.parentSlot ?? 0) - (b.parentSlot ?? 0))
+    .map((m) => ({ id: m.id, name: m.name, cents: paid.get(m.id) ?? 0 }));
+
   return {
     range, totalCents, count: rows.length, dailyAvgCents: days > 0 ? Math.round(totalCents / days) : 0,
-    buckets, byCategory, byMember, budgetCents,
+    buckets, byCategory, byMember, budgetCents, byPayer,
   };
 }
 

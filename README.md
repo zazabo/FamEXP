@@ -1,8 +1,8 @@
-# Οικογενειακό Εξοδολόγιο (Family Expense Tracker) — v0.5.0
+# Οικογενειακό Εξοδολόγιο (Family Expense Tracker) — v0.6.0
 
 Minimalist, bilingual (Greek / English) expense tracker for two parents. It runs as an installable web app (PWA) on both iPhone and Android, for free, with encrypted sync through Dropbox.
 
-> **Status:** Phase 5 of 6 — analytics (week / month / year) and PDF reports.
+> **Status:** v0.6.0 — all six planned phases complete.
 >
 > **Οδηγός εγκατάστασης στα ελληνικά: [SETUP-el.md](SETUP-el.md)** (Dropbox, GitHub Pages, κινητά). Changes: `CHANGELOG.md`.
 
@@ -74,12 +74,31 @@ public/icons/   app icons (regenerate with scripts/make-icons.py)
 - The PIN is stored only as a salted hash on that phone; each phone has its own PIN. After 5 wrong PINs the keypad waits 30 seconds.
 - A forgotten PIN cannot be recovered: reinstall the app and choose "Join an existing family" to get the data back from Dropbox (from Phase 4).
 
+## Features
+
+- First-run setup (new family / join family), PIN + Face ID / fingerprint lock.
+- Fast expense entry, dashboard with a variable monthly budget and 80 % / 100 % alerts.
+- Encrypted two-phone sync through Dropbox.
+- Analytics (week / month / year), PDF reports and Excel export.
+- Greek / English, light / dark, works offline.
+
 ## Analytics & PDF
 
 - Week (Monday–Sunday), month or year, with previous / next / current navigation.
 - Trend bars (per day / per week / per month; year view shows each month's budget), donut + ranked list by category (expandable to subcategories) and by family member.
 - **Export to PDF**: an A4, print-friendly report generated on the phone (jsPDF, vector charts, embedded Greek subset of DejaVu Sans — licence in `public/fonts/DejaVu-LICENSE.txt`) and handed to the share sheet; desktop browsers download it.
+- A **Paid by** line shows how much each parent paid in the period.
 - The Analytics screen and the PDF code load only when opened.
+
+## Excel export
+
+- Settings → Export → choose a year or *All years* → **Export to Excel (.xlsx)**.
+- Sheets: *Summary* (per month: total, budget, difference, count, per-category amounts) and one sheet per month (`Date`, `Category`, `Subcategory`, `For Whom`, `Paid By`, `Amount (€)`, `Note`). Real dates and numbers; opens in Excel and Google Sheets.
+
+## Performance
+
+- Rarely used screens (Analytics, Settings, first-run setup) and the PDF / Excel generators load on demand.
+- Framework code is split into long-lived chunks, so updates download only the changed app code; the service worker keeps everything available offline.
 
 ## Privacy
 

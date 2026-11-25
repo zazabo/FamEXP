@@ -1,8 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ExternalLink } from 'lucide-react';
-import { finishAuth, hasPendingAuth, startAuth } from '../services/dropbox';
+import { authFailureOf, cleanAuthCode, finishAuth, hasPendingAuth, startAuth, type AuthFailure } from '../services/dropbox';
 import { useSession } from '../state/session';
+
+const ERROR_KEYS: Record<AuthFailure, string> = {
+  expired: 'sync.codeExpired',
+  otherDevice: 'sync.codeOtherDevice',
+  appNotAllowed: 'sync.appNotAllowed',
+  offline: 'sync.errOffline',
+  other: 'sync.codeRejected',
+};
 
 /**
  * Connect Dropbox without redirects: open the authorization page, the parent taps Allow,
@@ -15,7 +23,7 @@ export function DropboxConnect({ onConnected }: { onConnected: () => void }) {
   const [opened, setOpened] = useState(false);
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<{ kind: AuthFailure; detail: string } | null>(null);
 
   useEffect(() => {
     void (async () => {
@@ -29,17 +37,19 @@ export function DropboxConnect({ onConnected }: { onConnected: () => void }) {
     const release = suppressAutoLock();
     window.setTimeout(release, 5 * 60_000);
     setOpened(true);
-    setError(false);
+    setError(null);
   };
 
   const connect = async () => {
     setBusy(true);
-    setError(false);
+    setError(null);
     try {
       await finishAuth(code);
       onConnected();
-    } catch {
-      setError(true);
+    } catch (err) {
+      setError({ kind: authFailureOf(err), detail: err instanceof Error ? err.message : '' });
+      setCode('');
+      setAuthUrl(await startAuth()); // fresh link + verifier for the next attempt
     } finally {
       setBusy(false);
     }
@@ -65,8 +75,13 @@ export function DropboxConnect({ onConnected }: { onConnected: () => void }) {
             <input className="input mono" autoComplete="off" autoCapitalize="off" spellCheck={false} value={code}
               placeholder={t('sync.codePlaceholder')} onChange={(e) => setCode(e.target.value)} />
           </label>
-          <p className="error">{error ? t('sync.codeRejected') : ''}</p>
-          <button type="button" className="btn btn-primary btn-block" disabled={busy || code.trim().length < 10}
+          <div role="alert">
+            <p className="error" style={{ minHeight: 0 }}>{error ? t(ERROR_KEYS[error.kind]) : ''}</p>
+            {error?.detail && error.kind !== 'offline' && (
+              <small className="muted mono" style={{ wordBreak: 'break-word' }}>{t('sync.dropboxSaid', { detail: error.detail })}</small>
+            )}
+          </div>
+          <button type="button" className="btn btn-primary btn-block" disabled={busy || cleanAuthCode(code).length < 10}
             onClick={() => void connect()}>
             {busy ? t('sync.connecting') : t('sync.connect')}
           </button>

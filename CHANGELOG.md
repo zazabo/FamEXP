@@ -2,6 +2,25 @@
 
 All notable changes to this project. Versions follow [Semantic Versioning](https://semver.org/); one minor version per build phase.
 
+## [0.6.0] — 2026-11-25 — Phase 6: Excel export & polish
+
+### Added
+- **Settings → Export → Excel (.xlsx)** for one year or all years: a *Summary* sheet (per month: total, budget, difference, count, amount per category, totals row) and one sheet per month with `Date`, `Category`, `Subcategory`, `For Whom`, `Paid By`, `Amount (€)`, `Note` — real dates and numbers, frozen header row, column widths; opens in Excel and Google Sheets. Generated on the phone (write-excel-file, loaded on demand) and handed to the share sheet.
+
+### Changed
+- Faster start and cheaper updates: Settings and the first-run setup now load on demand; framework code (React, router, Dexie/i18next) lives in separate long-lived chunks, so an app update re-downloads only ~33 KB (gzip) of app code.
+- README, `SETUP-el.md` and `CLAUDE.md` (v2.2) updated for the finished feature set.
+
+## [0.5.1] — 2026-11-25 — Dropbox connection messages & "Paid by"
+
+### Added
+- **Paid by** line in Analytics and in the PDF summary: how much each parent paid in the period.
+- Dropbox connection: when a code is refused, the app now says why — expired/already used, created on another device, or the Dropbox app does not allow PKCE (with the exact setting to change) — and shows Dropbox's own reply.
+
+### Fixed
+- Pasted Dropbox codes are cleaned (spaces, quotes, dots, line breaks removed).
+- After a refused code the app starts a fresh authorization (new link + verifier), so one failure no longer blocks the next attempts.
+
 ## [0.5.0] — 2026-11-25 — Phase 5: analytics & PDF reports
 
 ### Added

@@ -145,6 +145,20 @@ export async function buildReportPdf(summary: PeriodSummary, { t, locale, title 
   });
   y += 27;
 
+  // ---- paid by (two-parent families)
+  if (summary.byPayer.length > 1) {
+    font(8.5, 'bold');
+    doc.text(`${t('analytics.paidBy')}:`, M, y);
+    let x = M + doc.getTextWidth(`${t('analytics.paidBy')}:`) + 2;
+    summary.byPayer.forEach((p, i) => {
+      const part = `${i > 0 ? '· ' : ''}${p.name} ${formatMoney(p.cents)}`;
+      font(8.5, 'normal');
+      doc.text(part, x, y);
+      x += doc.getTextWidth(part) + 2;
+    });
+    y += 6;
+  }
+
   // ---- budget vs actual bar
   if (summary.budgetCents) {
     const level = budgetLevel(summary.totalCents, summary.budgetCents);

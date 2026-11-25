@@ -10,6 +10,20 @@ const base = process.env.VITE_BASE ?? '/';
 
 export default defineConfig({
   base,
+  build: {
+    rollupOptions: {
+      output: {
+        // Framework code in its own long-lived chunks: an app update re-downloads only the app code.
+        codeSplitting: {
+          groups: [
+            { name: 'vendor-react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/, priority: 3 },
+            { name: 'vendor-router', test: /node_modules[\\/](react-router|react-router-dom|cookie|set-cookie-parser)[\\/]/, priority: 2 },
+            { name: 'vendor-data', test: /node_modules[\\/](dexie|dexie-react-hooks|i18next|react-i18next|html-parse-stringify|void-elements)[\\/]/, priority: 1 },
+          ],
+        },
+      },
+    },
+  },
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
   },

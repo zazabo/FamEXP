@@ -8,10 +8,8 @@ import { SyncProvider } from './state/sync';
 import { LockGate, OnboardingGate, RequireUnlocked } from './routes/guards';
 import { TabsLayout } from './routes/TabsLayout';
 import { Dashboard } from './routes/Dashboard';
-import { Settings } from './routes/Settings';
 import { ChangePin } from './routes/ChangePin';
 import { Lock } from './routes/Lock';
-import { Onboarding } from './routes/Onboarding';
 import { AddExpense } from './routes/AddExpense';
 
 /**
@@ -19,8 +17,11 @@ import { AddExpense } from './routes/AddExpense';
  * Every screen with family data is behind RequireUnlocked: onboarding on first run,
  * then the lock screen on launch and on every return from background.
  */
-// Analytics (charts + PDF) loads only when opened, so the app itself starts faster.
+// Screens that are rarely opened load on demand, so the app itself starts faster:
+// Analytics (charts + PDF), Settings (sync, family, export) and the one-time setup.
 const Analytics = lazy(() => import('./routes/Analytics').then((m) => ({ default: m.Analytics })));
+const Settings = lazy(() => import('./routes/Settings').then((m) => ({ default: m.Settings })));
+const Onboarding = lazy(() => import('./routes/Onboarding').then((m) => ({ default: m.Onboarding })));
 
 function Loading() {
   const { t } = useTranslation();
@@ -37,7 +38,7 @@ const router = createHashRouter([
         children: [
           { index: true, element: <Dashboard /> },
           { path: 'analytics', element: <Suspense fallback={<Loading />}><Analytics /></Suspense> },
-          { path: 'settings', element: <Settings /> },
+          { path: 'settings', element: <Suspense fallback={<Loading />}><Settings /></Suspense> },
         ],
       },
       { path: '/settings/pin', element: <ChangePin /> },
@@ -46,7 +47,7 @@ const router = createHashRouter([
     ],
   },
   { path: '/lock', element: <LockGate><Lock /></LockGate> },
-  { path: '/onboarding', element: <OnboardingGate><Onboarding /></OnboardingGate> },
+  { path: '/onboarding', element: <OnboardingGate><Suspense fallback={<Loading />}><Onboarding /></Suspense></OnboardingGate> },
 ]);
 
 type BootState = { status: 'loading' } | { status: 'error' } | { status: 'ready'; onboarded: boolean };

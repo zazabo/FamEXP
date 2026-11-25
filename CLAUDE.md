@@ -1,5 +1,6 @@
-# CLAUDE.md — Project Instructions & Guardrails (v2.1)
+# CLAUDE.md — Project Instructions & Guardrails (v2.2)
 
+> v2.2 (2026-11-25): analytics, PDF and Excel rules; lazy-loading rule.
 > v2.1 (2026-11-24): variable per-month budget added.
 > v2 (2026-11-24): stack changed from Expo/React Native to an installable PWA so both phones (Android + iPhone) run it for free. v1 is kept in `CLAUDE.v1.md`.
 
@@ -57,7 +58,9 @@
 - **Category Integrity:** Always preserve the core Greek household hierarchy, including *Ταξίδια (Trips)* and *Εκδρομές (Excursions)* under *Ψυχαγωγία & Λοιπά*.
 - **Variable Budget (user-chosen):** a default monthly budget (`settings.monthlyBudgetCents`, applies to every month) plus optional per-month overrides in `budgets` (id `YYYY-MM`; `amountCents: null` = no budget that month). Editable from the Dashboard budget card: this month only / all months / no budget / reset to default. Both are shared and synced.
 - **Budget Notifications:** Check cumulative monthly spend against that month's effective budget after every local insert/edit/delete, budget change **and after every sync merge**. Notify once at **80%** and once at **100%** per `YYYY-MM` per device (in-app banner + system notification when permitted). Changing that month's budget re-arms the thresholds; deleting/undoing expenses does not. Web notifications only fire while the app is open — do not promise background alerts.
-- **PDF & Excel Exports:** generated on the phone and handed to the native share sheet (Web Share API). PDFs use light, print-friendly styling regardless of the app theme. Excel columns: `Date`, `Category`, `Subcategory`, `For Whom`, `Paid By`, `Amount (€)`, `Note` — compatible with Excel and Google Sheets.
+- **Analytics:** weeks run Monday–Sunday; month trend buckets are calendar weeks inside the month; year view shows each month's budget. Breakdown by category (with subcategories), by family member (household, parents, each child) and a "Paid by" line per parent. Chart colours come from the validated `chartPalette` and follow the entity (category/member), never its rank; every chart has a ranked list with values next to it.
+- **PDF & Excel Exports:** generated on the phone and handed to the native share sheet (Web Share API; download on desktop; offer a "Share" button if the browser needs a fresh tap). PDFs (jsPDF, vector charts, embedded Greek DejaVu subset) use light, print-friendly styling regardless of the app theme. Excel (write-excel-file): a Summary sheet plus one sheet per month with columns `Date`, `Category`, `Subcategory`, `For Whom`, `Paid By`, `Amount (€)`, `Note` — real dates (UTC midnight) and numbers, compatible with Excel and Google Sheets.
+- **Performance:** keep rarely used screens and heavy generators (PDF, Excel) lazy-loaded; never import them from the startup path.
 
 ---
 

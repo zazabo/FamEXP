@@ -181,7 +181,9 @@
     "pdfReady": "The PDF is ready.",
     "pdfFailed": "Creating the PDF failed.",
     "tableView": "Table",
-    "shareOf": "{{pct}}% of total"
+    "shareOf": "{{pct}}% of total",
+    "paidBy": "Paid by",
+    "paidByHint": "How much each parent paid in the period."
   },
   "settings": {
     "appearance": "Appearance & Language",
@@ -293,7 +295,11 @@
     "reconnect": "Reconnect",
     "merged_one": "{{count}} change arrived from the other phone",
     "merged_other": "{{count}} changes arrived from the other phone",
-    "statusHint": "Sync status with the other phone."
+    "statusHint": "Sync status with the other phone.",
+    "codeExpired": "The code expired or was already used. Tap “Open Dropbox” again for a new code.",
+    "codeOtherDevice": "The code does not belong to this device. Tap “Open Dropbox” on this device and paste the new code here.",
+    "appNotAllowed": "The FamEXP Dropbox app does not allow this connection. In dropbox.com/developers → FamEXP → Settings set “Allow public clients (Implicit Grant & PKCE)” to Allow.",
+    "dropboxSaid": "Dropbox said: {{detail}}"
   },
   "join": {
     "title": "Join a family",
@@ -343,5 +349,30 @@
     "share": "%",
     "used": "{{pct}}% used",
     "fileName": "Expenses"
+  },
+  "excel": {
+    "scope": "Period",
+    "scopeHint": "One year or all expenses.",
+    "all": "All years",
+    "hint": "Excel workbook with a Summary sheet and one sheet per month. Opens in Excel and Google Sheets.",
+    "generating": "Creating file…",
+    "ready": "The Excel file is ready.",
+    "failed": "Creating the Excel file failed.",
+    "share": "Share Excel file",
+    "noData": "No expenses to export yet.",
+    "fileAll": "all",
+    "summarySheet": "Summary",
+    "month": "Month",
+    "total": "Total (€)",
+    "budget": "Budget (€)",
+    "difference": "Difference (€)",
+    "count": "Count",
+    "date": "Date",
+    "category": "Category",
+    "subcategory": "Subcategory",
+    "forWhom": "For Whom",
+    "paidBy": "Paid By",
+    "amount": "Amount (€)",
+    "note": "Note"
   }
 }

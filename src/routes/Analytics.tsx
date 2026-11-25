@@ -125,6 +125,16 @@ export function Analytics() {
               <span className="muted stat-label">{t('analytics.dailyAvg')}</span>
               <span className="stat-mid">{formatMoney(summary.dailyAvgCents)}</span>
             </div>
+            {summary.byPayer.length > 1 && (
+              <div className="stat-wide" title={t('analytics.paidByHint')}>
+                <span className="muted stat-label">{t('analytics.paidBy')}</span>
+                <span className="stat-sub paid-by">
+                  {summary.byPayer.map((p, i) => (
+                    <span key={p.id}>{i > 0 && <span className="muted"> · </span>}{p.name} <strong>{formatMoney(p.cents)}</strong></span>
+                  ))}
+                </span>
+              </div>
+            )}
             <div className="stat-wide" title={t('analytics.budgetHint')}>
               <span className="muted stat-label">{t('analytics.budget')}</span>
               {period === 'week' ? (

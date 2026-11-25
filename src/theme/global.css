@@ -1053,3 +1053,9 @@ button {
   min-height: 30px;
   padding-right: 24px;
 }
+
+.paid-by {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 4px;
+}
