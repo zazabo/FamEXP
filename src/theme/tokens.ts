@@ -47,6 +47,20 @@ export const colors: Record<ResolvedTheme, ColorTokens> = {
   },
 };
 
+/**
+ * Categorical chart palette, fixed order (validated for colour-vision deficiency on both
+ * surfaces with the dataviz validator). A slot follows the entity (category / member),
+ * never its rank. Light slots 2–5 are below 3:1 on white, so every chart ships with
+ * visible labels / a ranked table next to it.
+ */
+export const chartPalette: Record<ResolvedTheme, string[]> = {
+  light: ['#257de0', '#f47230', '#00b894', '#f2a600', '#ee7fac', '#008a17', '#6a4ce2', '#ec4647'],
+  dark: ['#338ced', '#e76624', '#00a888', '#d28e05', '#e24d8b', '#0aac23', '#9887ef', '#eb6263'],
+};
+
+/** Colour of a chart slot as a CSS variable (works in both themes). */
+export const chartColor = (slot: number): string => `var(--c-chart-${(slot % 8) + 1})`;
+
 export const typography = {
   fontFamily:
     "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Noto Sans', 'Helvetica Neue', Arial, sans-serif",
@@ -72,6 +86,7 @@ export function applyThemeVariables(theme: ResolvedTheme): void {
   for (const [k, v] of Object.entries(typography.size)) root.style.setProperty(`--fs-${k}`, v);
   for (const [k, v] of Object.entries(spacing)) root.style.setProperty(`--sp-${k}`, v);
   for (const [k, v] of Object.entries(radius)) root.style.setProperty(`--r-${k}`, v);
+  chartPalette[theme].forEach((hex, i) => root.style.setProperty(`--c-chart-${i + 1}`, hex));
   root.style.setProperty('--font', typography.fontFamily);
   root.style.setProperty('--touch', touchTarget);
   root.dataset.theme = theme;

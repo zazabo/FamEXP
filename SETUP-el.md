@@ -22,7 +22,7 @@
 ## 2. GitHub Pages (repository `zazabo/FamEXP`)
 
 1. Ανεβάστε τα αρχεία του φακέλου του project στο branch **main** του repository (π.χ. με το GitHub Desktop: *Clone* το FamEXP σε έναν φάκελο, αντιγράψτε μέσα όλα τα αρχεία του project εκτός από `node_modules` και `dist`, *Commit* και *Push*). Το `.gitignore` ήδη εξαιρεί ό,τι δεν πρέπει να ανέβει.
-   - **Σημαντικό:** το αρχείο αυτόματης δημοσίευσης βρίσκεται στο `setup/deploy.yml` (δεν μπορούσε να γραφτεί απευθείας σε κρυφό φάκελο). Μετακινήστε το στο `.github/workflows/deploy.yml` μέσα στο repository πριν το Commit — ή στο GitHub: **Add file → Create new file**, όνομα `.github/workflows/deploy.yml`, επικολλήστε το περιεχόμενο του `setup/deploy.yml` και **Commit**.
+   - Το αρχείο αυτόματης δημοσίευσης `.github/workflows/deploy.yml` υπάρχει ήδη στο repository (το ανέβασε το Claude). Στον τοπικό φάκελο υπάρχει αντίγραφό του στο `setup/deploy.yml`.
 2. Στο GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 3. Καρτέλα **Actions**: περιμένετε να γίνει πράσινο το «Deploy to GitHub Pages» (1–2 λεπτά).
 4. Ανοίξτε https://zazabo.github.io/FamEXP/ — πρέπει να εμφανιστεί το «Καλώς ήρθατε».

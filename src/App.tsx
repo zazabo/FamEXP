@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getLocal, initDb } from './db/init';
@@ -8,7 +8,6 @@ import { SyncProvider } from './state/sync';
 import { LockGate, OnboardingGate, RequireUnlocked } from './routes/guards';
 import { TabsLayout } from './routes/TabsLayout';
 import { Dashboard } from './routes/Dashboard';
-import { Analytics } from './routes/Analytics';
 import { Settings } from './routes/Settings';
 import { ChangePin } from './routes/ChangePin';
 import { Lock } from './routes/Lock';
@@ -20,6 +19,14 @@ import { AddExpense } from './routes/AddExpense';
  * Every screen with family data is behind RequireUnlocked: onboarding on first run,
  * then the lock screen on launch and on every return from background.
  */
+// Analytics (charts + PDF) loads only when opened, so the app itself starts faster.
+const Analytics = lazy(() => import('./routes/Analytics').then((m) => ({ default: m.Analytics })));
+
+function Loading() {
+  const { t } = useTranslation();
+  return <p className="muted">{t('app.loading')}</p>;
+}
+
 const router = createHashRouter([
   {
     element: <RequireUnlocked />,
@@ -29,7 +36,7 @@ const router = createHashRouter([
         element: <TabsLayout />,
         children: [
           { index: true, element: <Dashboard /> },
-          { path: 'analytics', element: <Analytics /> },
+          { path: 'analytics', element: <Suspense fallback={<Loading />}><Analytics /></Suspense> },
           { path: 'settings', element: <Settings /> },
         ],
       },

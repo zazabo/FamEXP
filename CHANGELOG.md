@@ -2,6 +2,20 @@
 
 All notable changes to this project. Versions follow [Semantic Versioning](https://semver.org/); one minor version per build phase.
 
+## [0.5.0] — 2026-11-25 — Phase 5: analytics & PDF reports
+
+### Added
+- **Analytics tab**: Week (Monday–Sunday) / Month / Year with previous, next and "Current" navigation (period kept in the URL).
+- Summary: total, number of expenses, daily average over the elapsed days, budget vs actual (month: that month's budget; year: sum of the months' budgets; week: explained as monthly).
+- Trend bar chart (per day / calendar week / month) with tap-or-hover tooltip; the year view shows each month's budget as a dashed line.
+- Donut + ranked bars **by category** (tap to see subcategories) and **by family member** (household, each parent, each child; more than 7 fold into "Others"). Colour follows the category/member, never its rank; palette validated for colour-blind readers on both themes.
+- **PDF report** (A4, light print styling): summary, budget vs actual, vector trend chart, category donut + table with subcategories, per-member (per-child) donut + table, page footer. Generated on the phone with an embedded Greek font and handed to the share sheet (download on desktop; a "Share PDF" button if the browser needs a fresh tap).
+- `analytics.ts` aggregation shared by the screen and the PDF.
+
+### Changed
+- Analytics and the PDF code are lazy-loaded; jsPDF's unused HTML/SVG helpers are excluded from the offline cache; fonts are cached for offline PDF export.
+- `SETUP-el.md`: the deploy workflow is already in the repository.
+
 ## [0.4.0] — 2026-11-24 — Phase 4: encrypted Dropbox sync, family settings, GitHub Pages
 
 ### Added

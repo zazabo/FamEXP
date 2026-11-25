@@ -1,7 +1,7 @@
 {
   "name": "family-expenses",
   "private": true,
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Οικογενειακό Εξοδολόγιο — minimalist bilingual (el/en) family expense tracker PWA for two parents, with encrypted Dropbox sync.",
   "type": "module",
   "scripts": {
@@ -14,6 +14,7 @@
     "dexie": "^4.4.7",
     "dexie-react-hooks": "^4.4.0",
     "i18next": "^27.2.6",
+    "jspdf": "^4.2.1",
     "lucide-react": "^1.79.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

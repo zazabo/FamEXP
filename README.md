@@ -1,8 +1,8 @@
-# Οικογενειακό Εξοδολόγιο (Family Expense Tracker) — v0.4.0
+# Οικογενειακό Εξοδολόγιο (Family Expense Tracker) — v0.5.0
 
 Minimalist, bilingual (Greek / English) expense tracker for two parents. It runs as an installable web app (PWA) on both iPhone and Android, for free, with encrypted sync through Dropbox.
 
-> **Status:** Phase 4 of 6 — encrypted Dropbox sync, family settings, GitHub Pages.
+> **Status:** Phase 5 of 6 — analytics (week / month / year) and PDF reports.
 >
 > **Οδηγός εγκατάστασης στα ελληνικά: [SETUP-el.md](SETUP-el.md)** (Dropbox, GitHub Pages, κινητά). Changes: `CHANGELOG.md`.
 
@@ -39,7 +39,7 @@ Copy `.env.example` to `.env` and fill in values when they are needed:
 
 ## Publish & install
 
-- Live URL: **https://zazabo.github.io/FamEXP/** — built and deployed by `.github/workflows/deploy.yml` (copy of `setup/deploy.yml` — move it there) on every push to `main` (repo Settings → Pages → Source: *GitHub Actions*).
+- Live URL: **https://zazabo.github.io/FamEXP/** — built and deployed by `.github/workflows/deploy.yml` (local copy: `setup/deploy.yml`) on every push to `main` (repo Settings → Pages → Source: *GitHub Actions*).
 - **iPhone:** open the link in **Safari** → Share → **Add to Home Screen**. **Android:** **Chrome** → menu → **Install app**.
 - Full step-by-step guide (Greek): [SETUP-el.md](SETUP-el.md).
 
@@ -73,6 +73,13 @@ public/icons/   app icons (regenerate with scripts/make-icons.py)
 - The app locks on launch and every time it goes to the background. Unlock with the 4-digit PIN or, if enabled, Face ID / fingerprint (a passkey on the phone).
 - The PIN is stored only as a salted hash on that phone; each phone has its own PIN. After 5 wrong PINs the keypad waits 30 seconds.
 - A forgotten PIN cannot be recovered: reinstall the app and choose "Join an existing family" to get the data back from Dropbox (from Phase 4).
+
+## Analytics & PDF
+
+- Week (Monday–Sunday), month or year, with previous / next / current navigation.
+- Trend bars (per day / per week / per month; year view shows each month's budget), donut + ranked list by category (expandable to subcategories) and by family member.
+- **Export to PDF**: an A4, print-friendly report generated on the phone (jsPDF, vector charts, embedded Greek subset of DejaVu Sans — licence in `public/fonts/DejaVu-LICENSE.txt`) and handed to the share sheet; desktop browsers download it.
+- The Analytics screen and the PDF code load only when opened.
 
 ## Privacy
 

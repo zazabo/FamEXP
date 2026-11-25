@@ -37,8 +37,10 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,png,svg,woff2,ttf}'],
         navigateFallback: 'index.html',
+        // jsPDF's optional helpers (HTML/SVG rendering) are never used by the report; don't precache them.
+        globIgnores: ['**/html2canvas-*.js', '**/purify.es-*.js', '**/index.es-*.js'],
       },
     }),
   ],
